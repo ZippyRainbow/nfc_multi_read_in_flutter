@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - nfc_multi_read_in_flutter (1.0.0):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - nfc_multi_read_in_flutter (from `.symlinks/plugins/nfc_multi_read_in_flutter/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  nfc_multi_read_in_flutter:
+    :path: ".symlinks/plugins/nfc_multi_read_in_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  nfc_multi_read_in_flutter: c656fbfb1ec5b9d021da87b0c87629d62fd5264d
+
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
+
+COCOAPODS: 1.9.1
