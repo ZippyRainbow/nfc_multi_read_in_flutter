@@ -146,10 +146,10 @@ switch (call.method) {
         try {
             Map messageMap = (Map) writeArgs.get("message");
             if (messageMap == null) {
-                result.error("NFCMissingNDEFMultiMessage", "a ndef message was not given", null);
+                result.error("NFCMissingNDEFMessage", "a ndef message was not given", null);
                 break;
             }
-            NDEFMultiMessage message = formatMapToNDEFMultiMessage(messageMap);
+            NDEFMessage message = formatMapToNDEFMessage(messageMap);
             writeNDEF(message);
             result.success(null);
         } catch (NfcMultiReadInFlutterException e) {
@@ -232,9 +232,9 @@ if (ndef != null) {
     boolean closed = false;
     try {
         ndef.connect();
-        NDEFMultiMessage message = ndef.getNDEFMultiMessage();
+        NDEFMessage message = ndef.getNDEFMessage();
         if (message == null) {
-            eventSuccess(formatEmptyNDEFMultiMessage(ndef));
+            eventSuccess(formatEmptyNDEFMessage(ndef));
             return;
         }
         try {
@@ -243,7 +243,7 @@ if (ndef != null) {
         } catch (IOException e) {
             Log.e(LOG_TAG, "close NDEF tag error: " + e.getMessage());
         }
-        eventSuccess(formatNDEFMultiMessageToResult(ndef, message));
+        eventSuccess(formatNDEFMessageToResult(ndef, message));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N && !writeIgnore) {
             adapter.ignore(tag, ONE_SECOND, this, null);
         }
@@ -264,7 +264,7 @@ if (ndef != null) {
         }
     }
 } else if (formatable != null) {
-    eventSuccess(formatEmptyWritableNDEFMultiMessage());
+    eventSuccess(formatEmptyWritableNDEFMessage());
 }
 }
 
@@ -293,15 +293,15 @@ NdefFormatable formatable = NdefFormatable.get(tag);
 
 Map result;
 if (ndef != null) {
-    NDEFMultiMessage message = ndef.getCachedNDEFMultiMessage();
+    NDEFMessage message = ndef.getCachedNDEFMessage();
     try {
         ndef.close();
     } catch (IOException e) {
         Log.e(LOG_TAG, "close NDEF tag error: " + e.getMessage());
     }
-    result = formatNDEFMultiMessageToResult(ndef, message);
+    result = formatNDEFMessageToResult(ndef, message);
 } else if (formatable != null) {
-    result = formatEmptyWritableNDEFMultiMessage();
+    result = formatEmptyWritableNDEFMessage();
 } else {
     return;
 }
@@ -309,7 +309,7 @@ if (ndef != null) {
 eventSuccess(result);
 }
 
-private Map<String, Object> formatEmptyWritableNDEFMultiMessage() {
+private Map<String, Object> formatEmptyWritableNDEFMessage() {
 final Map<String, Object> result = new HashMap<>();
 result.put("id", "");
 result.put("message_type", "ndef");
@@ -328,14 +328,14 @@ result.put("records", records);
 return result;
 }
 
-private Map<String, Object> formatEmptyNDEFMultiMessage(Ndef ndef) {
-final Map<String, Object> result = formatEmptyWritableNDEFMultiMessage();
+private Map<String, Object> formatEmptyNDEFMessage(Ndef ndef) {
+final Map<String, Object> result = formatEmptyWritableNDEFMessage();
 result.put("id", getNDEFTagID(ndef));
 result.put("writable", ndef.isWritable());
 return result;
 }
 
-private Map<String, Object> formatNDEFMultiMessageToResult(Ndef ndef, NDEFMultiMessage message) {
+private Map<String, Object> formatNDEFMessageToResult(Ndef ndef, NDEFMessage message) {
 final Map<String, Object> result = new HashMap<>();
 List<Map<String, Object>> records = new ArrayList<>();
 for (NdefRecord record : message.getRecords()) {
@@ -513,7 +513,7 @@ result.put("writable", ndef.isWritable());
 return result;
 }
 
-private NDEFMultiMessage formatMapToNDEFMultiMessage(Map map) throws IllegalArgumentException {
+private NDEFMessage formatMapToNDEFMessage(Map map) throws IllegalArgumentException {
 Object mapRecordsObj = map.get("records");
 if (mapRecordsObj == null) {
     throw new IllegalArgumentException("missing records");
@@ -601,14 +601,14 @@ for (int i = 0; i < amountOfRecords; i++) {
     }
     records[i] = new NdefRecord(tnfValue, typeBytes, idBytes, payloadBytes);
 }
-return new NDEFMultiMessage(records);
+return new NDEFMessage(records);
 }
 
 private static class FormatRequest {
 final NdefFormatable formatable;
-final NDEFMultiMessage message;
+final NDEFMessage message;
 
-FormatRequest(NdefFormatable formatable, NDEFMultiMessage message) {
+FormatRequest(NdefFormatable formatable, NDEFMessage message) {
     this.formatable = formatable;
     this.message = message;
 }
@@ -637,7 +637,7 @@ protected NfcMultiReadInFlutterException doInBackground(FormatRequest... formatR
 }
 }
 
-private void writeNDEF(NDEFMultiMessage message) throws NfcMultiReadInFlutterException {
+private void writeNDEF(NDEFMessage message) throws NfcMultiReadInFlutterException {
 Ndef ndef = Ndef.get(lastTag);
 NdefFormatable formatable = NdefFormatable.get(lastTag);
 
@@ -652,7 +652,7 @@ if (ndef != null) {
             throw new NfcMultiReadInFlutterException("NFCTagSizeTooSmallError", "message is too large for this tag", details);
         }
         try {
-            ndef.writeNDEFMultiMessage(message);
+            ndef.writeNDEFMessage(message);
         } catch (IOException e) {
             throw new NfcMultiReadInFlutterException("IOError", "write to tag error: " + e.getMessage(), null);
         } catch (FormatException e) {

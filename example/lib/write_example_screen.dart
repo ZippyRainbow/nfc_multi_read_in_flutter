@@ -19,7 +19,7 @@ class WriteExampleScreen extends StatefulWidget {
 }
 
 class _WriteExampleScreenState extends State<WriteExampleScreen> {
-  StreamSubscription<NDEFMultiMessage> _stream;
+  StreamSubscription<NDEFMessage> _stream;
   List<RecordEditor> _records = [];
   bool _hasClosedWriteDialog = false;
 
@@ -36,7 +36,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
         record.payloadController.text,
       );
     }).toList();
-    NDEFMultiMessage message = NDEFMultiMessage.withRecords(records);
+    NDEFMessage message = NDEFMessage.withRecords(records);
 
     // Show dialog on Android (iOS has it's own one)
     if (Platform.isAndroid) {

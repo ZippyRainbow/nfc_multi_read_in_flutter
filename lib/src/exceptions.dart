@@ -95,7 +95,7 @@ class NFCTagUnavailableException implements Exception {
 }
 
 /// NDEFUnsupportedException is thrown when a tag does not support NDEF,
-/// but is being written an NDEFMultiMessage.
+/// but is being written an NDEFMessage.
 class NDEFUnsupportedException implements Exception {
   final message = "tag does not support NDEF formatting";
 

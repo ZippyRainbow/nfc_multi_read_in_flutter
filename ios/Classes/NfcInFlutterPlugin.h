@@ -25,9 +25,9 @@ API_AVAILABLE(ios(11))
 
 - (FlutterError * _Nullable)onCancelWithArguments:(id _Nullable)arguments;
 
-- (NSDictionary * _Nonnull)formatMessageWithIdentifier:(NSString* _Nonnull)identifier message:(NFCNDEFMultiMessage* _Nonnull)message;
+- (NSDictionary * _Nonnull)formatMessageWithIdentifier:(NSString* _Nonnull)identifier message:(NFCNDEFMessage* _Nonnull)message;
 
-- (NFCNDEFMultiMessage * _Nonnull)formatNDEFMultiMessageWithDictionary:(NSDictionary* _Nonnull)dictionary;
+- (NFCNDEFMessage * _Nonnull)formatNDEFMessageWithDictionary:(NSDictionary* _Nonnull)dictionary;
 @end
 
 API_AVAILABLE(ios(11))
