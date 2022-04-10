@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.version          = '1.0.0'
   s.summary          = 'Flutter plugin for reading NFC tags'
   s.description      = 'Flutter plugin for reading NFC tags'
-  s.homepage         = 'https://github.com/semlette/nfc_multi_read_in_flutter'
+  s.homepage         = 'https://github.com/ZippyRainbow/nfc_multi_read_in_flutter'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Andi Robin Halgren Semler' => 'andirobinsemler@gmail.com' }
   s.source           = { :path => '.' }

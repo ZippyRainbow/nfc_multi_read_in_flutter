@@ -142,7 +142,7 @@ class _NFCReaderState extends State {
 }
 ```
 
-Full example in [example directory](https://github.com/semlette/nfc_in_flutter/tree/master/example)
+Full example in [example directory](https://github.com/ZippyRainbow/nfc_multi_read_in_flutter/tree/master/example)
 
 ## Installation
 
