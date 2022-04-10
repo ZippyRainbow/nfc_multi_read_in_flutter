@@ -1,7 +1,7 @@
 #import <CoreNFC/CoreNFC.h>
-#import "NfcInFlutterPlugin.h"
+#import "NfcMultiReadInFlutterPlugin.h"
 
-@implementation NfcInFlutterPlugin {
+@implementation NfcMultiReadInFlutterPlugin {
     dispatch_queue_t dispatchQueue;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -15,7 +15,7 @@
                                        eventChannelWithName:@"nfc_multi_read_in_flutter/tags"
                                        binaryMessenger:[registrar messenger]];
     
-    NfcInFlutterPlugin* instance = [[NfcInFlutterPlugin alloc]
+    NfcMultiReadInFlutterPlugin* instance = [[NfcMultiReadInFlutterPlugin alloc]
                                     init:dispatchQueue
                                     channel:channel];
   

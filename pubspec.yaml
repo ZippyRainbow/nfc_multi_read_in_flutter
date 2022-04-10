@@ -21,7 +21,7 @@ flutter:
         platforms:
             android:
                 package: me.ZippyRainbow.nfc_multi_read_in_flutter
-                pluginClass: NfcWriteInFlutterPlugin
+                pluginClass: NfcMultiReadInFlutterPlugin
             ios:
-                pluginClass: NfcWriteInFlutterPlugin
+                pluginClass: NfcMultiReadInFlutterPlugin
 

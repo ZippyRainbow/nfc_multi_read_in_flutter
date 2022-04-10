@@ -8,7 +8,7 @@
 @end
 
 
-@interface NfcInFlutterPlugin : NSObject<FlutterPlugin> {
+@interface NfcMultiReadInFlutterPlugin : NSObject<FlutterPlugin> {
     FlutterEventSink events;
     NSObject<NFCWrapper>* wrapper;
 }
