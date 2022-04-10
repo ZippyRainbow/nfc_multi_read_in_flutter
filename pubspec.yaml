@@ -1,11 +1,11 @@
 name: nfc_multi_read_in_flutter
-description: Flutter plugin to write NFC tags on both Android and iOS. Currently it only supports reading NDEF formatted tags.
+description: Flutter plugin to multi read NFC tags on both Android and iOS. Currently it only supports reading NDEF formatted tags. Write is disabled.
 version: 2.0.5
 homepage: https://github.com/zippyrainbow/nfc_multi_read_in_flutter
 repository: https://github.com/zippyrainbow/nfc_multi_read_in_flutter
 
 environment:
-    sdk: ">=2.1.0 <3.0.0"
+    sdk: ">=2.12.0 <3.0.0"
     flutter: ">=1.10.0"
 
 dependencies:
