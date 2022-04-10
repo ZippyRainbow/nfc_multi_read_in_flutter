@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   void _readNFC(BuildContext context) {
     try {
       // ignore: cancel_subscriptions
-      StreamSubscription<NDEFMultiMessage> subscription = NFC.readNDEF().listen(
+      StreamSubscription<NDEFMultiMessage> subscription = NFCMultiRead.readNDEF().listen(
           (tag) {
         // On new tag, add it to state
         setState(() {
@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    NFC.isNDEFSupported.then((supported) {
+    NFCMultiRead.isNDEFSupported.then((supported) {
       setState(() {
         _supportsNFC = true;
       });

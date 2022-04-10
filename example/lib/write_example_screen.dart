@@ -59,7 +59,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
     }
 
     // Write to the first tag scanned
-    await NFC.writeNDEF(message).first;
+    await NFCMultiRead.writeNDEF(message).first;
     if (!_hasClosedWriteDialog) {
       Navigator.pop(context);
     }

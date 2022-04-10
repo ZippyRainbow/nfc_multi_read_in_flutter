@@ -507,11 +507,11 @@ class NDEFTag implements NFCTag {
 
   NDEFTag._internal(this.id, this.writable);
 
-  NDEFTag._fromMap(Map<String, dynamic> map)
-      : assert(map["id"] is String),
-        assert(map[("writable" is bool) as String]),
-        id = map["id"],
-        writable = map["writable"];
+  // NDEFTag._fromMap(Map<String, dynamic> map)
+  //     : assert(map["id"] is String),
+  //       assert(map[("writable" is bool) as String]),
+  //       id = map["id"],
+  //       writable = map["writable"];
 
   Future write(NDEFMultiMessage message) async {
     if (!writable!) {
