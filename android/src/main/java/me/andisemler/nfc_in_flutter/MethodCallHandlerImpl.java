@@ -1,4 +1,4 @@
-package me.andisemler.nfc_multi_read_in_flutter;
+package me.ZippyRainbow.nfc_multi_read_in_flutter;
 
 import android.app.Activity;
 import android.app.PendingIntent;

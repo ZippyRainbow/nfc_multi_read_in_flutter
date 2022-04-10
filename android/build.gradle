@@ -1,4 +1,4 @@
-group 'me.andisemler.nfc_multi_read_in_flutter'
+group 'me.ZippyRainbow.nfc_multi_read_in_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {

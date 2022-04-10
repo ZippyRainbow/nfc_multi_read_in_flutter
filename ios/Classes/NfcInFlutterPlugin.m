@@ -5,7 +5,7 @@
     dispatch_queue_t dispatchQueue;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    dispatch_queue_t dispatchQueue = dispatch_queue_create("me.andisemler.nfc_multi_read_in_flutter.dispatch_queue", NULL);
+    dispatch_queue_t dispatchQueue = dispatch_queue_create("me.ZippyRainbow.nfc_multi_read_in_flutter.dispatch_queue", NULL);
     
     FlutterMethodChannel* channel = [FlutterMethodChannel
                                      methodChannelWithName:@"nfc_multi_read_in_flutter"

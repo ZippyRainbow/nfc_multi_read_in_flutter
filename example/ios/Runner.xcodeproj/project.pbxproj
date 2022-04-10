@@ -401,7 +401,7 @@
 					"-weak_framework",
 					"\"CoreNFC\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.andisemler.nfcInFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = me.ZippyRainbow.nfcInFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -555,7 +555,7 @@
 					"-weak_framework",
 					"\"CoreNFC\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.andisemler.nfcInFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = me.ZippyRainbow.nfcInFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -589,7 +589,7 @@
 					"-weak_framework",
 					"\"CoreNFC\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = me.andisemler.nfcInFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = me.ZippyRainbow.nfcInFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

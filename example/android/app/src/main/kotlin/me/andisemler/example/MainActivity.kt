@@ -1,4 +1,4 @@
-package me.andisemler.example
+package me.ZippyRainbow.example
 
 import io.flutter.embedding.android.FlutterActivity
 
