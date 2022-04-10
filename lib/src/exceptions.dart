@@ -16,16 +16,16 @@ class NFCMultipleReaderModesException implements Exception {
       "started reading with a different reader mode than the one already in use";
 }
 
-/// NFCUserCanceledSessionException is thrown on iOS when the users cancels the
+/// NFCMultiUserCanceledSessionException is thrown on iOS when the users cancels the
 /// reading session (Clicks OK/done).
-class NFCUserCanceledSessionException implements Exception {
+class NFCMultiUserCanceledSessionException implements Exception {
   @override
   String toString() => "the user has cancelled the reading session";
 }
 
-/// NFCSessionTimeoutException is thrown on iOS when the session has been active
+/// NFCMultiSessionTimeoutException is thrown on iOS when the session has been active
 /// for 60 seconds.
-class NFCSessionTimeoutException implements Exception {
+class NFCMultiSessionTimeoutException implements Exception {
   @override
   String toString() => "the reading session timed out";
 }
@@ -95,7 +95,7 @@ class NFCTagUnavailableException implements Exception {
 }
 
 /// NDEFUnsupportedException is thrown when a tag does not support NDEF,
-/// but is being written an NDEFMessage.
+/// but is being written an NDEFMultiMessage.
 class NDEFUnsupportedException implements Exception {
   final message = "tag does not support NDEF formatting";
 

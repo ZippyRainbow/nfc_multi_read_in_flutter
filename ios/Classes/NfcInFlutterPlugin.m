@@ -136,9 +136,9 @@
     return nil;
 }
 
-// formatMessageWithIdentifier turns a NFCNDEFMessage into a NSDictionary that
+// formatMessageWithIdentifier turns a NFCNDEFMultiMessage into a NSDictionary that
 // is ready to be sent to Flutter
-- (NSDictionary * _Nonnull)formatMessageWithIdentifier:(NSString* _Nonnull)identifier message:(NFCNDEFMessage* _Nonnull)message {
+- (NSDictionary * _Nonnull)formatMessageWithIdentifier:(NSString* _Nonnull)identifier message:(NFCNDEFMultiMessage* _Nonnull)message {
     NSMutableArray<NSDictionary*>* records = [[NSMutableArray alloc] initWithCapacity:message.records.count];
     for (NFCNDEFPayload* payload in message.records) {
         NSString* type;
@@ -350,7 +350,7 @@
     return result;
 }
 
-- (NFCNDEFMessage* _Nonnull)formatNDEFMessageWithDictionary:(NSDictionary* _Nonnull)dictionary API_AVAILABLE(ios(13.0)) {
+- (NFCNDEFMultiMessage* _Nonnull)formatNDEFMultiMessageWithDictionary:(NSDictionary* _Nonnull)dictionary API_AVAILABLE(ios(13.0)) {
     NSMutableArray<NFCNDEFPayload*>* ndefRecords = [[NSMutableArray alloc] init];
     
     NSDictionary *message = [dictionary valueForKey:@"message"];
@@ -420,7 +420,7 @@
         [ndefRecords addObject:ndefRecord];
     }
     
-    return [[NFCNDEFMessage alloc] initWithNDEFRecords:ndefRecords];
+    return [[NFCNDEFMultiMessage alloc] initWithNDEFRecords:ndefRecords];
 }
 
 @end
@@ -445,7 +445,7 @@
     return NFCNDEFReaderSession.readingAvailable;
 }
     
-- (void)readerSession:(nonnull NFCNDEFReaderSession *)session didDetectNDEFs:(nonnull NSArray<NFCNDEFMessage *> *)messages API_AVAILABLE(ios(11.0)) {
+- (void)readerSession:(nonnull NFCNDEFReaderSession *)session didDetectNDEFs:(nonnull NSArray<NFCNDEFMultiMessage *> *)messages API_AVAILABLE(ios(11.0)) {
     // Iterate through the messages and send them to Flutter with the following structure:
     // { Map
     //   "message_type": "ndef",
@@ -457,7 +457,7 @@
     //     }
     //   ]
     // }
-    for (NFCNDEFMessage* message in messages) {
+    for (NFCNDEFMultiMessage* message in messages) {
         NSDictionary* result = [self formatMessageWithIdentifier:@"" message:message];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self->events != nil) {
@@ -488,7 +488,7 @@
 //                NSLog(@"connect error: %@", error.localizedDescription);
 //                return;
 //            }
-//            [tag readNDEFWithCompletionHandler:^(NFCNDEFMessage * _Nullable message, NSError * _Nullable error) {
+//            [tag readNDEFWithCompletionHandler:^(NFCNDEFMultiMessage * _Nullable message, NSError * _Nullable error) {
 //                
 //                if (error != nil) {
 //                    NSLog(@"ERROR: %@", error.localizedDescription);
@@ -527,7 +527,7 @@
 //}
 
 //- (void)writeToTag:(NSDictionary*)data completionHandler:(void (^_Nonnull) (FlutterError * _Nullable error))completionHandler {
-//    NFCNDEFMessage* ndefMessage = [self formatNDEFMessageWithDictionary:data];
+//    NFCNDEFMultiMessage* NDEFMultiMessage = [self formatNDEFMultiMessageWithDictionary:data];
     
 //    if (lastTag != nil) {
 //        if (!lastTag.available) {
@@ -552,7 +552,7 @@
                 
                 // Write to the tag if possible
 //                if (status == NFCNDEFStatusReadWrite) {
-//                    [self->lastTag writeNDEF:ndefMessage completionHandler:^(NSError* _Nullable error) {
+//                    [self->lastTag writeNDEF:NDEFMultiMessage completionHandler:^(NSError* _Nullable error) {
 //                        if (error != nil) {
 //                            FlutterError *flutterError;
 //                            switch (error.code) {

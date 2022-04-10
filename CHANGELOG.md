@@ -68,7 +68,7 @@ use to connect and write to tags.
 
 ## 1.2.0
 
--   Added `id` property to `NDEFMessage` which contains the NFC tag's UID
+-   Added `id` property to `NDEFMultiMessage` which contains the NFC tag's UID
 -   Support for more card types on Android
 
 ## 1.1.1

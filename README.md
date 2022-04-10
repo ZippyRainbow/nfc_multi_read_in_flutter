@@ -9,10 +9,10 @@ NFC in Flutter is a plugin for reading and writing NFC tags in Flutter. It works
 ### Read NFC tags
 
 ```dart
-// NFC.readNDEF returns a stream of NDEFMessage
-Stream<NDEFMessage> stream = NFC.readNDEF();
+// NFC.readNDEF returns a stream of NDEFMultiMessage
+Stream<NDEFMultiMessage> stream = NFC.readNDEF();
 
-stream.listen((NDEFMessage message) {
+stream.listen((NDEFMultiMessage message) {
     print("records: ${message.records.length}");
 });
 ```
@@ -20,32 +20,32 @@ stream.listen((NDEFMessage message) {
 ### Read one NFC tag
 
 ```dart
-NDEFMessage message = await NFC.readNDEF(once: true).first;
+NDEFMultiMessage message = await NFC.readNDEF(once: true).first;
 print("payload: ${message.payload}");
 // once: true` only scans one tag!
 ```
 
 ### Writing to tags
 
-You can access a message's NFC tag using the `NDEFMessage`'s `.tag` property. The tag has a `.write` method, which allows you to write a NDEF message to the tag.
+You can access a message's NFC tag using the `NDEFMultiMessage`'s `.tag` property. The tag has a `.write` method, which allows you to write a NDEF message to the tag.
 
 _Note that the read stream must still be open when the `.write` method is called. This means that the `once` argument in `.readNDEF()` cannot be used._
 
 ```dart
-Stream<NDEFMessage> stream = NFC.readNDEF();
+Stream<NDEFMultiMessage> stream = NFC.readNDEF();
 
-stream.listen((NDEFMessage message) {
-    NDEFMessage newMessage = NDEFMessage.withRecords(
+stream.listen((NDEFMultiMessage message) {
+    NDEFMultiMessage newMessage = NDEFMultiMessage.withRecords(
         NDEFRecord.mime("text/plain", "hello world")
     );
     message.tag.write(newMessage);
 });
 ```
 
-You can also use the `NFC.writeNDEF(NDEFMessage)` method, which wraps the code above with support for the `once` argument.
+You can also use the `NFC.writeNDEF(NDEFMultiMessage)` method, which wraps the code above with support for the `once` argument.
 
 ```dart
-NDEFMessage newMessage = NDEFMessage.withRecords(
+NDEFMultiMessage newMessage = NDEFMultiMessage.withRecords(
     NDEFRecord.mime("text/plain", "hello world")
 );
 Stream<NDEFTag> stream = NFC.writeNDEF(newMessage);
@@ -58,7 +58,7 @@ stream.listen((NDEFTag tag) {
 If you only want to write to one tag, you can set the `once` argument to true.
 
 ```dart
-NDEFMessage newMessage = NDEFMessage.withRecords(
+NDEFMultiMessage newMessage = NDEFMultiMessage.withRecords(
     NDEFRecord.mime("text/plain", "hello world")
 );
 Stream<NDEFTag> stream = NFC.writeNDEF(newMessage, once: true);
@@ -71,7 +71,7 @@ stream.listen((NDEFTag tag) {
 And if you would rather use a `Future` based API, you can await the returned stream's `.first` method.
 
 ```dart
-NDEFMessage newMessage = NDEFMessage.withRecords(
+NDEFMultiMessage newMessage = NDEFMultiMessage.withRecords(
     NDEFRecord.type("text/plain", "hello world")
 );
 
@@ -91,7 +91,7 @@ class NFCReader extends StatefulWidget {
 class _NFCReaderState extends State {
     bool _supportsNFC = false;
     bool _reading = false;
-    StreamSubscription<NDEFMessage> _stream;
+    StreamSubscription<NDEFMultiMessage> _stream;
 
     @override
     void initState() {
@@ -129,7 +129,7 @@ class _NFCReaderState extends State {
                         _stream = NFC.readNDEF(
                             once: true,
                             throwOnUserCancel: false,
-                        ).listen((NDEFMessage message) {
+                        ).listen((NDEFMultiMessage message) {
                             print("read NDEF message: ${message.payload}"),
                         }, onError: (e) {
                             // Check error handling guide below
@@ -195,7 +195,7 @@ If your app **requires** NFC, you can add the following to only allow it to be d
 
 ## "What is NDEF?"
 
-If you're new to NFC you may come to expect a lot of `readNFC()` calls, but instead you see `readNDEF()` and `NDEFMessage`. NDEF is just a formatting standard the tags can be encoded in. There are other encodings than NDEF, but NDEF is the most common one. Currently NFC in Flutter only supports NDEF formatted tags.
+If you're new to NFC you may come to expect a lot of `readNFC()` calls, but instead you see `readNDEF()` and `NDEFMultiMessage`. NDEF is just a formatting standard the tags can be encoded in. There are other encodings than NDEF, but NDEF is the most common one. Currently NFC in Flutter only supports NDEF formatted tags.
 
 ## Host Card Emulation
 
@@ -203,7 +203,7 @@ NFC in Flutter supports reading from emulated host cards\*.
 
 To read from emulated host cards, you need to do a few things.
 
--   Call `readNDEF()` with the `readerMode` argument set to an instance of `NFCDispatchReaderMode`.
+-   Call `readNDEF()` with the `readerMode` argument set to an instance of `NFCDispatchMultiReaderMode`.
 -   Insert the following `<intent-filter />` in your `AndroidManifest.xml` activity:
 
 ```xml
@@ -217,7 +217,7 @@ To read from emulated host cards, you need to do a few things.
 
 ### ⚠️ Multiple reader modes
 
-If you start a `readNDEF()` stream with the reader mode set to an instance of `NFCDispatchReaderMode`, while another stream is active with the `NFCNormalReaderMode`, it will throw a `NFCMultipleReaderModesException`.
+If you start a `readNDEF()` stream with the reader mode set to an instance of `NFCDispatchMultiReaderMode`, while another stream is active with the `NFCNormalReaderMode`, it will throw a `NFCMultipleReaderModesException`.
 
 ## Platform differences
 
@@ -243,13 +243,13 @@ Thrown when a reading session is started, but not actually supported.
 
 ### iOS
 
-#### `NFCUserCanceledSessionException`
+#### `NFCMultiUserCanceledSessionException`
 
 Thrown when the user clicks Cancel/Done core NFC popup. If you don't need to know if the user canceled the session you can start reading with the `throwOnUserCancel` argument set to `false` like so: `readNDEF(throwOnUserCancel: false)`
 
-#### `NFCSessionTimeoutException`
+#### `NFCMultiSessionTimeoutException`
 
-Core NFC limits NFC reading sessions to 60 seconds. `NFCSessionTimeoutException` is thrown when the session has been active for 60 seconds.
+Core NFC limits NFC reading sessions to 60 seconds. `NFCMultiSessionTimeoutException` is thrown when the session has been active for 60 seconds.
 
 #### `NFCSessionTerminatedUnexpectedlyException`
 

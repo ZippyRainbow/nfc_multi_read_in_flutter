@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 import './exceptions.dart';
 
-class NFC {
+class NFCMultiRead {
   static MethodChannel _channel = MethodChannel("nfc_multi_read_in_flutter");
   static const EventChannel _eventChannel = const EventChannel("nfc_multi_read_in_flutter/tags");
 
@@ -57,7 +57,7 @@ class NFC {
         ));
       }
 
-      return NDEFMessage._internal(tag["id"], tag["type"], records);
+      return NDEFMultiMessage._internal(tag["id"], tag["type"], records);
     });
   }
 
@@ -74,11 +74,11 @@ class NFC {
 
   /// readNDEF starts listening for NDEF formatted tags. Any non-NDEF formatted
   /// tags will be filtered out.
-  static Stream<NDEFMessage> readNDEF({
+  static Stream<NDEFMultiMessage> readNDEF({
     /// once will stop reading after the first tag has been read.
     bool once = false,
 
-    /// throwOnUserCancel decides if a [NFCUserCanceledSessionException] error
+    /// throwOnUserCancel decides if a [NFCMultiUserCanceledSessionException] error
     /// should be thrown on iOS when the user clicks Cancel/Done.
     bool throwOnUserCancel = true,
 
@@ -98,14 +98,14 @@ class NFC {
     // Create a StreamController to wrap the tag stream. Any errors will be
     // converted to their matching exception classes. The controller stream will
     // be closed if the errors are fatal.
-    StreamController<NDEFMessage> controller = StreamController();
+    StreamController<NDEFMultiMessage> controller = StreamController();
     final stream = once ? _tagStream!.take(1) : _tagStream!;
     // Listen for tag reads.
     final subscription = stream.listen(
       (message) => controller.add(message),
       onError: (error) {
         error = _mapException(error);
-        if (!throwOnUserCancel && error is NFCUserCanceledSessionException) {
+        if (!throwOnUserCancel && error is NFCMultiUserCanceledSessionException) {
           return;
         }
         controller.addError(error);
@@ -149,7 +149,7 @@ class NFC {
   /// If you only want to write to the first tag, you can set the [once]
   /// argument to `true` and use the `.first` method on the returned `Stream`.
   static Stream<NDEFTag> writeNDEF(
-    NDEFMessage newMessage, {
+    NDEFMultiMessage newMessage, {
 
     /// once will stop reading after the first tag has been read.
     bool once = false,
@@ -172,7 +172,7 @@ class NFC {
     int writes = 0;
     StreamSubscription<NFCMessage> stream = _tagStream!.listen(
       (msg) async {
-        NDEFMessage message = msg;
+        NDEFMultiMessage message = msg;
         if (message.tag.writable!) {
           try {
             await message.tag.write(newMessage);
@@ -271,12 +271,12 @@ class NFCNormalReaderMode implements NFCReaderMode {
   }
 }
 
-/// NFCDispatchReaderMode uses the Android NFC Foreground Dispatch API to read
+/// NFCDispatchMultiReaderMode uses the Android NFC Foreground Dispatch API to read
 /// tags with.
-class NFCDispatchReaderMode implements NFCReaderMode {
+class NFCDispatchMultiReaderMode implements NFCReaderMode {
   String get name => "dispatch";
 
-  const NFCDispatchReaderMode();
+  const NFCDispatchMultiReaderMode();
 
   @override
   Map get _options {
@@ -300,16 +300,16 @@ abstract class NFCTag {
   bool? get writable;
 }
 
-class NDEFMessage implements NFCMessage {
+class NDEFMultiMessage implements NFCMessage {
   final String? id;
   String? type;
   final List<NDEFRecord> records;
 
-  NDEFMessage.withRecords(this.records, {this.id});
+  NDEFMultiMessage.withRecords(this.records, {this.id});
 
-  NDEFMessage(this.type, this.records) : id = null;
+  NDEFMultiMessage(this.type, this.records) : id = null;
 
-  NDEFMessage._internal(this.id, this.type, this.records);
+  NDEFMultiMessage._internal(this.id, this.type, this.records);
 
   // payload returns the payload of the first non-empty record. If all records
   // are empty it will return null.
@@ -513,7 +513,7 @@ class NDEFTag implements NFCTag {
         id = map["id"],
         writable = map["writable"];
 
-  Future write(NDEFMessage message) async {
+  Future write(NDEFMultiMessage message) async {
     if (!writable!) {
       throw NFCTagUnwritableException();
     }
@@ -556,10 +556,10 @@ Exception _mapException(dynamic error) {
         error = NDEFReadingUnsupportedException();
         break;
       case "UserCanceledSessionError":
-        error = NFCUserCanceledSessionException();
+        error = NFCMultiUserCanceledSessionException();
         break;
       case "SessionTimeoutError":
-        error = NFCSessionTimeoutException();
+        error = NFCMultiSessionTimeoutException();
         break;
       case "SessionTerminatedUnexpectedlyErorr":
         error = NFCSessionTerminatedUnexpectedlyException(error.message);

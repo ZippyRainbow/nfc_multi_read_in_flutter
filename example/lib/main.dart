@@ -51,10 +51,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // _stream is a subscription to the stream returned by `NFC.read()`.
   // The subscription is stored in state so the stream can be canceled later
-  StreamSubscription<NDEFMessage> _stream;
+  StreamSubscription<NDEFMultiMessage> _stream;
 
   // _tags is a list of scanned tags
-  List<NDEFMessage> _tags = [];
+  List<NDEFMultiMessage> _tags = [];
 
   bool _supportsNFC = false;
 
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
   void _readNFC(BuildContext context) {
     try {
       // ignore: cancel_subscriptions
-      StreamSubscription<NDEFMessage> subscription = NFC.readNDEF().listen(
+      StreamSubscription<NDEFMultiMessage> subscription = NFC.readNDEF().listen(
           (tag) {
         // On new tag, add it to state
         setState(() {
@@ -78,10 +78,10 @@ class _MyAppState extends State<MyApp> {
       },
           // Errors are unlikely to happen on Android unless the NFC tags are
           // poorly formatted or removed too soon, however on iOS at least one
-          // error is likely to happen. NFCUserCanceledSessionException will
+          // error is likely to happen. NFCMultiUserCanceledSessionException will
           // always happen unless you call readNDEF() with the `throwOnUserCancel`
           // argument set to false.
-          // NFCSessionTimeoutException will be thrown if the session timer exceeds
+          // NFCMultiSessionTimeoutException will be thrown if the session timer exceeds
           // 60 seconds (iOS only).
           // And then there are of course errors for unexpected stuff. Good fun!
           onError: (e) {
@@ -89,7 +89,7 @@ class _MyAppState extends State<MyApp> {
           _stream = null;
         });
 
-        if (!(e is NFCUserCanceledSessionException)) {
+        if (!(e is NFCMultiUserCanceledSessionException)) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(

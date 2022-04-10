@@ -47,14 +47,14 @@ NFC.readNDEF()
     ));
 ```
 
-When an error occurs it will show an `AlertDialog`, unless the error is a `NFCUserCanceledSessionException`.
+When an error occurs it will show an `AlertDialog`, unless the error is a `NFCMultiUserCanceledSessionException`.
 
 ```dart
 NFC.readNDEF()
     .listen((tag) {
         // ...
     }, onError: (error) {
-        if (!(error is NFCUserCanceledSessionException)) {
+        if (!(error is NFCMultiUserCanceledSessionException)) {
             // It is up to you how many exceptions you want to check for.
             showDialog(
                 context: context,
