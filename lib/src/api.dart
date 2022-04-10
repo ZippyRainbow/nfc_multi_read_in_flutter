@@ -57,7 +57,7 @@ class NFCMultiRead {
         ));
       }
 
-      return NDEFMessage._internal(tag["id"], tag["type"], records);
+      return NDEFMultiMessage._internal(tag["id"], tag["type"], records);
     });
   }
 
@@ -74,7 +74,7 @@ class NFCMultiRead {
 
   /// readNDEF starts listening for NDEF formatted tags. Any non-NDEF formatted
   /// tags will be filtered out.
-  static Stream<NDEFMessage> readNDEF({
+  static Stream<NDEFMultiMessage> readNDEF({
     /// once will stop reading after the first tag has been read.
     bool once = false,
 
@@ -98,7 +98,7 @@ class NFCMultiRead {
     // Create a StreamController to wrap the tag stream. Any errors will be
     // converted to their matching exception classes. The controller stream will
     // be closed if the errors are fatal.
-    StreamController<NDEFMessage> controller = StreamController();
+    StreamController<NDEFMultiMessage> controller = StreamController();
     final stream = once ? _tagStream!.take(1) : _tagStream!;
     // Listen for tag reads.
     final subscription = stream.listen(
@@ -149,7 +149,7 @@ class NFCMultiRead {
   /// If you only want to write to the first tag, you can set the [once]
   /// argument to `true` and use the `.first` method on the returned `Stream`.
   static Stream<NDEFTag> writeNDEF(
-    NDEFMessage newMessage, {
+    NDEFMultiMessage newMessage, {
 
     /// once will stop reading after the first tag has been read.
     bool once = false,
@@ -172,7 +172,7 @@ class NFCMultiRead {
     int writes = 0;
     StreamSubscription<NFCMessage> stream = _tagStream!.listen(
       (msg) async {
-        NDEFMessage message = msg;
+        NDEFMultiMessage message = msg;
         if (message.tag.writable!) {
           try {
             await message.tag.write(newMessage);
@@ -300,16 +300,16 @@ abstract class NFCTag {
   bool? get writable;
 }
 
-class NDEFMessage implements NFCMessage {
+class NDEFMultiMessage implements NFCMessage {
   final String? id;
   String? type;
   final List<NDEFRecord> records;
 
-  NDEFMessage.withRecords(this.records, {this.id});
+  NDEFMultiMessage.withRecords(this.records, {this.id});
 
-  NDEFMessage(this.type, this.records) : id = null;
+  NDEFMultiMessage(this.type, this.records) : id = null;
 
-  NDEFMessage._internal(this.id, this.type, this.records);
+  NDEFMultiMessage._internal(this.id, this.type, this.records);
 
   // payload returns the payload of the first non-empty record. If all records
   // are empty it will return null.
@@ -513,7 +513,7 @@ class NDEFTag implements NFCTag {
         id = map["id"],
         writable = map["writable"];
 
-  Future write(NDEFMessage message) async {
+  Future write(NDEFMultiMessage message) async {
     if (!writable!) {
       throw NFCTagUnwritableException();
     }

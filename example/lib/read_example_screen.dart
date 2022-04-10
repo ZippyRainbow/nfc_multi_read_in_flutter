@@ -8,13 +8,13 @@ class ReadExampleScreen extends StatefulWidget {
 }
 
 class _ReadExampleScreenState extends State<ReadExampleScreen> {
-  StreamSubscription<NDEFMessage> _stream;
+  StreamSubscription<NDEFMultiMessage> _stream;
 
   void _startScanning() {
     setState(() {
       _stream = NFC
           .readNDEF(alertMessage: "Custom message with readNDEF#alertMessage")
-          .listen((NDEFMessage message) {
+          .listen((NDEFMultiMessage message) {
         if (message.isEmpty) {
           print("Read empty NDEF message");
           return;
