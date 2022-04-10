@@ -518,7 +518,7 @@ class NDEFTag implements NFCTag {
       throw NFCTagUnwritableException();
     }
     try {
-      return NFC._channel.invokeMethod("writeNDEF", {
+      return MultiRead._channel.invokeMethod("writeNDEF", {
         "id": id,
         "message": message._toMap(),
       });
