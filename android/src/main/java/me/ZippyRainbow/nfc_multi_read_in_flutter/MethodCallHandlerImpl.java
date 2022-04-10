@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.FormatException;
-import android.nfc.NDEFMultiMessage;
+import android.nfc.NDEFMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
