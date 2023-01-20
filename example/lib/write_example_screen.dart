@@ -14,13 +14,15 @@ class RecordEditor {
 }
 
 class WriteExampleScreen extends StatefulWidget {
+  const WriteExampleScreen({Key key}) : super(key: key);
+
   @override
   _WriteExampleScreenState createState() => _WriteExampleScreenState();
 }
 
 class _WriteExampleScreenState extends State<WriteExampleScreen> {
   StreamSubscription<NDEFMultiMessage> _stream;
-  List<RecordEditor> _records = [];
+  final List<RecordEditor> _records = [];
   bool _hasClosedWriteDialog = false;
 
   void _addRecord() {
@@ -45,14 +47,18 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
         builder: (context) => AlertDialog(
           title: const Text("Scan the tag you want to write to"),
           actions: <Widget>[
-            FlatButton(
-              child: const Text("Cancel"),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
               onPressed: () {
                 _hasClosedWriteDialog = true;
                 _stream?.cancel();
                 Navigator.pop(context);
               },
+              child: const Text("Cancel"),
             ),
+
           ],
         ),
       );
@@ -75,10 +81,16 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
         padding: const EdgeInsets.all(20),
         children: <Widget>[
           Center(
-            child: OutlineButton(
-              child: const Text("Add record"),
+            child: TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
               onPressed: _addRecord,
+              child: const Text("Add record"),
             ),
+
+
+
           ),
           for (var record in _records)
             Padding(
@@ -89,13 +101,13 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
                   Text("Record", style: Theme.of(context).textTheme.bodyText2),
                   TextFormField(
                     controller: record.mediaTypeController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Media type",
                     ),
                   ),
                   TextFormField(
                     controller: record.payloadController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Payload",
                     ),
                   )
@@ -103,10 +115,16 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
               ),
             ),
           Center(
-            child: RaisedButton(
+            child: TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: _records.isNotEmpty ? () => _write(context) : null,
               child: const Text("Write to tag"),
-              onPressed: _records.length > 0 ? () => _write(context) : null,
             ),
+
+
+
           ),
         ],
       ),

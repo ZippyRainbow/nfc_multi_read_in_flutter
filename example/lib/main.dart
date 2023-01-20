@@ -6,9 +6,11 @@ import 'package:nfc_multi_read_in_flutter/nfc_multi_read_in_flutter.dart';
 import './read_example_screen.dart';
 import './write_example_screen.dart';
 
-void main() => runApp(ExampleApp());
+void main() => runApp(const ExampleApp());
 
 class ExampleApp extends StatelessWidget {
+  const ExampleApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,7 +38,7 @@ class ExampleApp extends StatelessWidget {
         }),
       ),
       routes: {
-        "/read_example": (context) => ReadExampleScreen(),
+        "/read_example": (context) => const ReadExampleScreen(),
         "/write_example": (context) => WriteExampleScreen(),
       },
     );
@@ -44,6 +46,8 @@ class ExampleApp extends StatelessWidget {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -54,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   StreamSubscription<NDEFMultiMessage> _stream;
 
   // _tags is a list of scanned tags
-  List<NDEFMultiMessage> _tags = [];
+  final List<NDEFMultiMessage> _tags = [];
 
   bool _supportsNFC = false;
 
@@ -89,7 +93,7 @@ class _MyAppState extends State<MyApp> {
           _stream = null;
         });
 
-        if (!(e is NFCMultiUserCanceledSessionException)) {
+        if (e is! NFCMultiUserCanceledSessionException) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -146,14 +150,18 @@ class _MyAppState extends State<MyApp> {
             Builder(
               builder: (context) {
                 if (!_supportsNFC) {
-                  return FlatButton(
-                    child: Text("NFC unsupported"),
-                    onPressed: null,
+                  return TextButton(
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                    ),
+                    onPressed: () { },
+                    child: const Text("NFC unsupported"),
                   );
                 }
-                return FlatButton(
-                  child:
-                      Text(_stream == null ? "Start reading" : "Stop reading"),
+                return TextButton(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  ),
                   onPressed: () {
                     if (_stream == null) {
                       _readNFC(context);
@@ -161,11 +169,12 @@ class _MyAppState extends State<MyApp> {
                       _stopReading();
                     }
                   },
+                  child: Text(_stream == null ? "Start reading" : "Stop reading"),
                 );
               },
             ),
             IconButton(
-              icon: Icon(Icons.clear_all),
+              icon: const Icon(Icons.clear_all),
               onPressed: () {
                 setState(() {
                   _tags.clear();
@@ -179,9 +188,9 @@ class _MyAppState extends State<MyApp> {
         body: ListView.builder(
           itemCount: _tags.length,
           itemBuilder: (context, index) {
-            const TextStyle payloadTextStyle = const TextStyle(
+            const TextStyle payloadTextStyle = TextStyle(
               fontSize: 15,
-              color: const Color(0xFF454545),
+              color: Color(0xFF454545),
             );
 
             return Padding(
@@ -190,7 +199,7 @@ class _MyAppState extends State<MyApp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Text("NDEF Tag",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Builder(
                     builder: (context) {
                       // Build list of records
@@ -203,7 +212,7 @@ class _MyAppState extends State<MyApp> {
                               "Record ${i + 1} - ${_tags[index].records[i].type}",
                               style: const TextStyle(
                                 fontSize: 13,
-                                color: const Color(0xFF666666),
+                                color: Color(0xFF666666),
                               ),
                             ),
                             Text(

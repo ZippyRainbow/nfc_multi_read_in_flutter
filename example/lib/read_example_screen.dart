@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:nfc_multi_read_in_flutter/nfc_multi_read_in_flutter.dart';
 
 class ReadExampleScreen extends StatefulWidget {
+  const ReadExampleScreen({Key key}) : super(key: key);
+
   @override
   _ReadExampleScreenState createState() => _ReadExampleScreenState();
 }
@@ -71,10 +73,14 @@ class _ReadExampleScreenState extends State<ReadExampleScreen> {
         title: const Text("Read NFC example"),
       ),
       body: Center(
-          child: RaisedButton(
-        child: const Text("Toggle scan"),
-        onPressed: _toggleScan,
-      )),
+          child: TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            ),
+            onPressed:  _toggleScan,
+            child: const Text("Toggle scan"),
+          )
+          ),
     );
   }
 }
