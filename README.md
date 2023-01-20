@@ -81,7 +81,7 @@ await NFC.writeNDEF(newMessage, once: true).first;
 ## Example
 
 ```dart
-import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+import 'package:nfc_multi_read_in_flutter/nfc_in_flutter.dart';
 
 class NFCReader extends StatefulWidget {
     @override
@@ -146,11 +146,11 @@ Full example in [example directory](https://github.com/ZippyRainbow/nfc_multi_re
 
 ## Installation
 
-Add `nfc_in_flutter` to your `pubspec.yaml`
+Add `nfc_multi_read_in_flutter` to your `pubspec.yaml`
 
 ```yaml
 dependencies:
-    nfc_in_flutter: 2.0.5
+    nfc_multi_read_in_flutter: 2.0.5
 ```
 
 ### iOS
