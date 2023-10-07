@@ -15,7 +15,7 @@
 @end
 
 API_AVAILABLE(ios(11))
-@interface NFCWrapperBase : NSObject <FlutterStreamHandler> {
+@interface NFCMultiWrapperBase : NSObject <FlutterStreamHandler> {
     FlutterEventSink events;
     NFCNDEFReaderSession* session;
 }
@@ -31,7 +31,7 @@ API_AVAILABLE(ios(11))
 @end
 
 API_AVAILABLE(ios(11))
-@interface NFCWrapperImpl : NFCWrapperBase <NFCWrapper, NFCNDEFReaderSessionDelegate> {
+@interface NFCMultiWrapperImpl : NFCMultiWrapperBase <NFCWrapper, NFCNDEFReaderSessionDelegate> {
     FlutterMethodChannel* methodChannel;
     dispatch_queue_t dispatchQueue;
 }
@@ -39,11 +39,11 @@ API_AVAILABLE(ios(11))
 @end
 
 API_AVAILABLE(ios(13))
-@interface NFCWritableWrapperImpl : NFCWrapperImpl
+@interface NFCMultiWritableWrapperImpl : NFCMultiWrapperImpl
 
 @property (atomic, retain) __kindof id<NFCNDEFTag> _Nullable lastTag;
 
 @end
 
-@interface NFCUnsupportedWrapper : NSObject <NFCWrapper>
+@interface NFCMultiUnsupportedWrapper : NSObject <NFCWrapper>
 @end

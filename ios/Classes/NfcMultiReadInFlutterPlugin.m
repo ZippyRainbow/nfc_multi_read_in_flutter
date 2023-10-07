@@ -26,11 +26,11 @@
 - (id)init:(dispatch_queue_t)dispatchQueue channel:(FlutterMethodChannel*)channel {
     self->dispatchQueue = dispatchQueue;
     if (@available(iOS 13.0, *)) {
-        wrapper = [[NFCWritableWrapperImpl alloc] init:channel dispatchQueue:dispatchQueue];
+        wrapper = [[NFCMultiWritableWrapperImpl alloc] init:channel dispatchQueue:dispatchQueue];
     } else if (@available(iOS 11.0, *)) {
-        wrapper = [[NFCWrapperImpl alloc] init:channel dispatchQueue:dispatchQueue];
+        wrapper = [[NFCMultiWrapperImpl alloc] init:channel dispatchQueue:dispatchQueue];
     } else {
-        wrapper = [[NFCUnsupportedWrapper alloc] init];
+        wrapper = [[NFCMultiUnsupportedWrapper alloc] init];
     }
     return self;
 }
@@ -61,7 +61,7 @@
 @end
 
 
-@implementation NFCWrapperBase
+@implementation NFCMultiWrapperBase
 
 - (void)readerSession:(nonnull NFCNDEFReaderSession *)session didInvalidateWithError:(nonnull NSError *)error API_AVAILABLE(ios(11.0)) {
     // When a session has been invalidated it needs to be created again to work.
@@ -425,7 +425,7 @@
 
 @end
 
-@implementation NFCWrapperImpl
+@implementation NFCMultiWrapperImpl
 
 - (id)init:(FlutterMethodChannel*)methodChannel dispatchQueue:(dispatch_queue_t)dispatchQueue {
     self->methodChannel = methodChannel;
@@ -514,7 +514,7 @@
 
 @end
 
-@implementation NFCWritableWrapperImpl
+@implementation NFCMultiWritableWrapperImpl
 
 //@synthesize lastTag;
 
@@ -594,7 +594,7 @@
 
 @end
 
-@implementation NFCUnsupportedWrapper
+@implementation NFCMultiUnsupportedWrapper
 
 - (BOOL)isEnabled {
     // https://knowyourmeme.com/photos/1483348-bugs-bunnys-no
