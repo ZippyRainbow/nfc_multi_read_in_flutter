@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_multi_read_in_flutter/nfc_multi_read_in_flutter.dart';
 
 class ReadExampleScreen extends StatefulWidget {
-  const ReadExampleScreen({Key key}) : super(key: key);
+  const ReadExampleScreen({Key? key}) : super(key: key);
 
   @override
   _ReadExampleScreenState createState() => _ReadExampleScreenState();
 }
 
 class _ReadExampleScreenState extends State<ReadExampleScreen> {
-  StreamSubscription<NDEFMultiMessage> _stream;
+  StreamSubscription<NDEFMultiMessage>? _stream;
 
   void _startScanning() {
     setState(() {
@@ -18,24 +19,36 @@ class _ReadExampleScreenState extends State<ReadExampleScreen> {
           .readNDEF(alertMessage: "Custom message with readNDEF#alertMessage")
           .listen((NDEFMultiMessage message) {
         if (message.isEmpty) {
-          print("Read empty NDEF message");
+          if (kDebugMode) {
+            print("Read empty NDEF message");
+          }
           return;
         }
-        print("Read NDEF message with ${message.records.length} records");
+        if (kDebugMode) {
+          print("Read NDEF message with ${message.records.length} records");
+        }
         for (NDEFRecord record in message.records) {
-          print(
+          if (kDebugMode) {
+            print(
               "Record '${record.id ?? "[NO ID]"}' with TNF '${record.tnf}', type '${record.type}', payload '${record.payload}' and data '${record.data}' and language code '${record.languageCode}'");
+          }
         }
       }, onError: (error) {
         setState(() {
           _stream = null;
         });
         if (error is NFCMultiUserCanceledSessionException) {
-          print("user canceled");
+          if (kDebugMode) {
+            print("user canceled");
+          }
         } else if (error is NFCMultiSessionTimeoutException) {
-          print("session timed out");
+          if (kDebugMode) {
+            print("session timed out");
+          }
         } else {
-          print("error: $error");
+          if (kDebugMode) {
+            print("error: $error");
+          }
         }
       }, onDone: () {
         setState(() {
@@ -75,7 +88,7 @@ class _ReadExampleScreenState extends State<ReadExampleScreen> {
       body: Center(
           child: TextButton(
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
             ),
             onPressed:  _toggleScan,
             child: const Text("Toggle scan"),

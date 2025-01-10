@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:io';
 
 class RecordEditor {
-  TextEditingController mediaTypeController;
-  TextEditingController payloadController;
+  TextEditingController mediaTypeController = TextEditingController();
+  TextEditingController payloadController = TextEditingController();
 
   RecordEditor() {
     mediaTypeController = TextEditingController();
@@ -14,14 +14,14 @@ class RecordEditor {
 }
 
 class WriteExampleScreen extends StatefulWidget {
-  const WriteExampleScreen({Key key}) : super(key: key);
+  const WriteExampleScreen({Key? key}) : super(key: key);
 
   @override
   _WriteExampleScreenState createState() => _WriteExampleScreenState();
 }
 
 class _WriteExampleScreenState extends State<WriteExampleScreen> {
-  StreamSubscription<NDEFMultiMessage> _stream;
+  StreamSubscription<NDEFMultiMessage>? _stream;
   final List<RecordEditor> _records = [];
   bool _hasClosedWriteDialog = false;
 
@@ -49,7 +49,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
           actions: <Widget>[
             TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: () {
                 _hasClosedWriteDialog = true;
@@ -83,7 +83,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
           Center(
             child: TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: _addRecord,
               child: const Text("Add record"),
@@ -98,7 +98,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Record", style: Theme.of(context).textTheme.bodyText2),
+                  Text("Record", style: Theme.of(context).textTheme.bodyMedium),
                   TextFormField(
                     controller: record.mediaTypeController,
                     decoration: const InputDecoration(
@@ -117,7 +117,7 @@ class _WriteExampleScreenState extends State<WriteExampleScreen> {
           Center(
             child: TextButton(
               style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: _records.isNotEmpty ? () => _write(context) : null,
               child: const Text("Write to tag"),

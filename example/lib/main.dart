@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_multi_read_in_flutter/nfc_multi_read_in_flutter.dart';
 
@@ -9,7 +10,7 @@ import './write_example_screen.dart';
 void main() => runApp(const ExampleApp());
 
 class ExampleApp extends StatelessWidget {
-  const ExampleApp({Key key}) : super(key: key);
+  const ExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +40,14 @@ class ExampleApp extends StatelessWidget {
       ),
       routes: {
         "/read_example": (context) => const ReadExampleScreen(),
-        "/write_example": (context) => WriteExampleScreen(),
+        "/write_example": (context) => const WriteExampleScreen(),
       },
     );
   }
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -55,7 +56,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // _stream is a subscription to the stream returned by `NFC.read()`.
   // The subscription is stored in state so the stream can be canceled later
-  StreamSubscription<NDEFMultiMessage> _stream;
+  StreamSubscription<NDEFMultiMessage>? _stream;
 
   // _tags is a list of scanned tags
   final List<NDEFMultiMessage> _tags = [];
@@ -108,7 +109,9 @@ class _MyAppState extends State<MyApp> {
         _stream = subscription;
       });
     } catch (err) {
-      print("error: $err");
+      if (kDebugMode) {
+        print("error: $err");
+      }
     }
   }
 
@@ -152,7 +155,7 @@ class _MyAppState extends State<MyApp> {
                 if (!_supportsNFC) {
                   return TextButton(
                     style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                      foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                     ),
                     onPressed: () { },
                     child: const Text("NFC unsupported"),
@@ -160,7 +163,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 return TextButton(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                    foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                   ),
                   onPressed: () {
                     if (_stream == null) {
@@ -216,11 +219,11 @@ class _MyAppState extends State<MyApp> {
                               ),
                             ),
                             Text(
-                              _tags[index].records[i].payload,
+                              _tags[index].records[i].payload!,
                               style: payloadTextStyle,
                             ),
                             Text(
-                              _tags[index].records[i].data,
+                              _tags[index].records[i].data!,
                               style: payloadTextStyle,
                             ),
                           ],
