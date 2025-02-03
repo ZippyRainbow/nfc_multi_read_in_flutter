@@ -25,9 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    if (project.android.hasProperty("namespace")) {
-        namespace("com.runningstars.nfcmultireadinflutter")
-    }
+    namespace("com.runningstars.nfcmultireadinflutter")
     compileSdkVersion 34
 
     lintOptions {
