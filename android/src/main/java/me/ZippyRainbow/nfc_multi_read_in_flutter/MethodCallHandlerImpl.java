@@ -1,5 +1,8 @@
 package me.ZippyRainbow.nfc_multi_read_in_flutter;
 
+import io.flutter.plugin.common.MethodChannel.Result;
+import android.os.Build; // For version checks
+
 import android.nfc.NfcAdapter;
 import android.util.Log;
 import android.app.PendingIntent;
@@ -33,6 +36,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.flutter.plugin.common.MethodChannel.Result;
+
 final class MethodCallHandlerImpl implements
         MethodChannel.MethodCallHandler,
         EventChannel.StreamHandler,
@@ -56,7 +61,10 @@ final class MethodCallHandlerImpl implements
     private @Nullable Tag lastTag = null;
     private boolean writeIgnore = false;
 
-
+    @Override
+    public void onTagRemoved() {
+        // Optional: Add any tag removal handling if needed
+    }
 
     @Override
     public boolean onNewIntent(Intent intent) {
@@ -232,7 +240,7 @@ final class MethodCallHandlerImpl implements
             writeNDEF(message);
             result.success(null);
         } catch (NfcMultiReadInFlutterException e) {
-            result.error(e.code, e.message, e.details);
+            result.error(e.code, e.getMessage(), e.details);
         } catch (Exception e) {
             result.error("UNKNOWN_ERROR", e.getMessage(), null);
         }
@@ -430,11 +438,11 @@ final class MethodCallHandlerImpl implements
 
     private NdefRecord createNdefRecordFromMap(Map<?, ?> recordMap) throws NfcMultiReadInFlutterException {
         try {
-            // Get required fields
-            String tnfStr = (String) recordMap.get("tnf");
-            String type = (String) recordMap.getOrDefault("type", "");
-            String id = (String) recordMap.getOrDefault("id", "");
-            String payload = (String) recordMap.getOrDefault("payload", "");
+            // Get required fields with explicit casting
+            String tnfStr = recordMap.get("tnf") != null ? recordMap.get("tnf").toString() : "";
+            String type = recordMap.get("type") != null ? recordMap.get("type").toString() : "";
+            String id = recordMap.get("id") != null ? recordMap.get("id").toString() : "";
+            String payload = recordMap.get("payload") != null ? recordMap.get("payload").toString() : "";
 
             // Convert TNF string to short value
             short tnf = convertTnfStringToShort(tnfStr);
@@ -443,7 +451,9 @@ final class MethodCallHandlerImpl implements
             if (tnf == NdefRecord.TNF_WELL_KNOWN) {
                 byte[] typeBytes = type.getBytes(StandardCharsets.US_ASCII);
                 if (Arrays.equals(typeBytes, NdefRecord.RTD_TEXT)) {
-                    String languageCode = (String) recordMap.getOrDefault("languageCode", Locale.getDefault().getLanguage());
+                    String languageCode = recordMap.get("languageCode") != null ?
+                            recordMap.get("languageCode").toString() :
+                            Locale.getDefault().getLanguage();
                     return createTextRecord(payload, languageCode);
                 } else if (Arrays.equals(typeBytes, NdefRecord.RTD_URI)) {
                     return NdefRecord.createUri(payload);
@@ -567,6 +577,11 @@ final class MethodCallHandlerImpl implements
             super(message);
             this.code = code;
             this.details = details;
+        }
+
+        @Override
+        public String getMessage() {
+            return super.getMessage();
         }
     }
 
