@@ -6,24 +6,13 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 
-/**
- * NfcMultiReadInFlutterPlugin
- */
 public class NfcMultiReadInFlutterPlugin implements FlutterPlugin, ActivityAware {
     private @Nullable FlutterPluginBinding flutterPluginBinding;
     private @Nullable ActivityPluginBinding activityPluginBinding;
     private @Nullable MethodCallHandlerImpl methodCallHandler;
 
-    // This static registerWith() method is no longer needed for V2 plugins
-    // It's kept only for compatibility with apps that don't use the v2 Android embedding
-    @SuppressWarnings("deprecation")
-    public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
-        MethodCallHandlerImpl handler = new MethodCallHandlerImpl(registrar.activity(), registrar.messenger());
-        registrar.addNewIntentListener(handler);
-    }
-
-    public NfcMultiReadInFlutterPlugin() {
-    }
+    // Remove the deprecated registerWith() method completely
+    // No need for backward compatibility if you're targeting Flutter 3.29+
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
