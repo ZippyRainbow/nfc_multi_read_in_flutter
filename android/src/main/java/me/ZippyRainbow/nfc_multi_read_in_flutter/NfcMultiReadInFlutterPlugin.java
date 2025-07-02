@@ -2,8 +2,6 @@ package me.ZippyRainbow.nfc_multi_read_in_flutter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -11,19 +9,17 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 /**
  * NfcMultiReadInFlutterPlugin
  */
-public class NfcMultiReadInFlutterPlugin implements FlutterPlugin,
-        ActivityAware{
-
+public class NfcMultiReadInFlutterPlugin implements FlutterPlugin, ActivityAware {
     private @Nullable FlutterPluginBinding flutterPluginBinding;
-    private static @Nullable MethodCallHandlerImpl methodCallHandler;
+    private @Nullable ActivityPluginBinding activityPluginBinding;
+    private @Nullable MethodCallHandlerImpl methodCallHandler;
 
-    /**
-     * Plugin registration.
-     */
+    // This static registerWith() method is no longer needed for V2 plugins
+    // It's kept only for compatibility with apps that don't use the v2 Android embedding
     @SuppressWarnings("deprecation")
-    public static void registerWith(Registrar registrar) {
-        methodCallHandler = new MethodCallHandlerImpl(registrar.activity(), registrar.messenger());
-        registrar.addNewIntentListener(methodCallHandler);
+    public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+        MethodCallHandlerImpl handler = new MethodCallHandlerImpl(registrar.activity(), registrar.messenger());
+        registrar.addNewIntentListener(handler);
     }
 
     public NfcMultiReadInFlutterPlugin() {
@@ -41,8 +37,14 @@ public class NfcMultiReadInFlutterPlugin implements FlutterPlugin,
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        methodCallHandler = new MethodCallHandlerImpl(binding.getActivity(), flutterPluginBinding.getBinaryMessenger());
-        binding.addOnNewIntentListener(methodCallHandler);
+        this.activityPluginBinding = binding;
+        if (flutterPluginBinding != null) {
+            methodCallHandler = new MethodCallHandlerImpl(
+                    binding.getActivity(),
+                    flutterPluginBinding.getBinaryMessenger()
+            );
+            binding.addOnNewIntentListener(methodCallHandler);
+        }
     }
 
     @Override
@@ -57,11 +59,11 @@ public class NfcMultiReadInFlutterPlugin implements FlutterPlugin,
 
     @Override
     public void onDetachedFromActivity() {
-        // Could be on too low of an SDK to have started listening originally.
-        if (methodCallHandler != null) {
+        if (methodCallHandler != null && activityPluginBinding != null) {
+            activityPluginBinding.removeOnNewIntentListener(methodCallHandler);
             methodCallHandler.stopListening();
             methodCallHandler = null;
-          }
+        }
+        activityPluginBinding = null;
     }
-
 }
