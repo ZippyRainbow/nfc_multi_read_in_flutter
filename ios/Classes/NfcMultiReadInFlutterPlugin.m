@@ -44,10 +44,15 @@
 - (void)handleMethodCallAsync:(FlutterMethodCall*)call result:(FlutterResult)result {
     if ([@"readNDEFSupported" isEqualToString:call.method]) {
         result([NSNumber numberWithBool:[wrapper isEnabled]]);
+    } else if ([@"readNDEFEnabled" isEqualToString:call.method]) {
+        result([NSNumber numberWithBool:[wrapper isEnabled]]);
     } else if ([@"startNDEFReading" isEqualToString:call.method]) {
         NSDictionary* args = call.arguments;
         [wrapper startReading:[args[@"scan_once"] boolValue] alertMessage:args[@"alert_message"]];
         result(nil);
+    } else if ([@"stopNDEFReading" isEqualToString:call.method]) {
+        [wrapper stopReading];
+        result([NSNumber numberWithBool:YES]);
     } else if ([@"writeNDEF" isEqualToString:call.method]) {
         NSDictionary* args = call.arguments;
         [wrapper writeToTag:args completionHandler:^(FlutterError * _Nullable error) {
