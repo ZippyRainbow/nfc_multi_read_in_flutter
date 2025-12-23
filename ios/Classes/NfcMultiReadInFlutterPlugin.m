@@ -445,6 +445,17 @@
     }
     [self->session beginSession];
 }
+
+- (void)stopReading {
+    if (self->session != nil) {
+        if ([self->session isReady]) {
+            // Invalidate the session first
+            [self->session invalidateSession];
+        }
+        // Then set it to nil
+        self->session = nil;
+    }
+}
     
 - (BOOL)isEnabled {
     return NFCNDEFReaderSession.readingAvailable;
