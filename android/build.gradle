@@ -2,38 +2,51 @@ group 'me.ZippyRainbow.nfc_multi_read_in_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
+    ext.kotlin_version = '2.4.10'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:9.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()  // Replaced jcenter() with mavenCentral()
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     namespace("me.ZippyRainbow.nfc_multi_read_in_flutter")
-    compileSdkVersion 34
+    compileSdk 34
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 
     defaultConfig {
         minSdkVersion 19
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"  // Updated to AndroidX
     }
+
     lintOptions {
         disable 'InvalidPackage'
     }
-    dependencies {
-        implementation 'androidx.annotation:annotation:1.3.0'
-        implementation 'androidx.core:core:1.8.0'
-    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
